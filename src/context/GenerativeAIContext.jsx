@@ -8,8 +8,8 @@ const GenerativeAIContext = createContext({
   scrollToDocumentBottom: () => {},
 });
 
-const GenerativeAIProvider = ({ REACT_APP_API_KEY, children }) => {
-  const apiKey = REACT_APP_API_KEY;
+const GenerativeAIProvider = ({ children }) => {
+  const apiKey = process.env.REACT_APP_API_KEY;
 
   async function fileToGenerativePart(file) {
     const base64EncodedDataPromise = new Promise((resolve) => {

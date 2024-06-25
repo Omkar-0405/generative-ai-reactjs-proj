@@ -6,7 +6,7 @@ import GenerativeAI from "./components/GenerativeAI";
 function App() {
   return (
     <>
-      <GenerativeAIProvider REACT_APP_API_KEY={process.env.REACT_APP_API_KEY}>
+      <GenerativeAIProvider>
         <BrowserRouter>
           <Routes>
             <Route index element={<GenerativeAI />} />
