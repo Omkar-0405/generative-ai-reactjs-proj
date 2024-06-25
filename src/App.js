@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Router, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
 import { GenerativeAIProvider } from "./context/GenerativeAIContext";
 import GenerativeAI from "./components/GenerativeAI";
@@ -6,7 +6,7 @@ import GenerativeAI from "./components/GenerativeAI";
 function App() {
   return (
     <>
-      <GenerativeAIProvider>
+      <GenerativeAIProvider REACT_APP_API_KEY={process.env.REACT_APP_API_KEY}>
         <BrowserRouter>
           <Routes>
             <Route index element={<GenerativeAI />} />
