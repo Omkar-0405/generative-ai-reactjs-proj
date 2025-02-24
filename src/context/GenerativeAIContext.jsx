@@ -1,5 +1,5 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import React, { createContext, useState, useEffect } from "react";
+import React, { createContext } from "react";
 
 const GenerativeAIContext = createContext({
   apiKey: "",

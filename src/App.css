@@ -14,103 +14,401 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
- * {
+/* Reset default styles and set global properties */
+/* Reset default styles and set global properties */
+* {
+  margin: 0;
+  padding: 0;
   box-sizing: border-box;
 }
 
-header {
-  border-bottom: 2px solid rgb(127, 127, 127, 0.5);
-  font-size: 24px;
-  padding: 16px;
-  text-align: center;
-}
-
 body {
-  font-family: "Roboto", sans-serif;
-  margin: 0;
+  font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, "Roboto",
+    sans-serif;
+  background-color: #f5f5f5;
+  color: #353740;
+  line-height: 1.5;
 }
 
-.loading::after {
-  content: "Loading...";
-  display: block;
-  font-size: 80%;
-  font-style: italic;
-  margin: 16px 0;
-}
-
-.loading {
-  opacity: 0.5;
-}
-
-.error {
-  color: red;
-}
-
-.container,
-header,
-.form-container {
+/* Container styling */
+.container {
+  max-width: 900px;
   margin: 0 auto;
-  max-width: 700px;
-}
-
-.form-container {
-  border-bottom: 2px solid rgb(127, 127, 127, 0.5);
-}
-
-img.thumb {
-  border: 1px solid grey;
-  border-radius: 8px;
-  height: 100px;
-  margin: 0px 16px 16px 0;
-  padding: 2px;
-  width: 100px;
-}
-
-#form,
-.history-item {
-  align-items: center;
+  padding: 20px;
+  min-height: 100vh;
   display: flex;
-  justify-content: center;
-  padding: 16px 0;
+  flex-direction: column;
+  gap: 20px;
 }
 
+/* Header styling */
+header {
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: #202124;
+  text-align: center;
+  padding: 15px 0;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+/* Form styling */
+#form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+/* File input styling */
 #file {
-  flex-grow: 0;
+  padding: 10px;
+  border: 1px solid #d3d3d3;
+  border-radius: 6px;
+  background: #fafafa;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
 }
 
+#file:hover {
+  border-color: #b0b0b0;
+}
+
+/* Text input styling */
 #prompt {
-  margin: 4px;
-  padding: 2px;
+  padding: 12px 15px;
+  border: 1px solid #d3d3d3;
+  border-radius: 6px;
+  font-size: 1rem;
+  min-height: 120px;
+  resize: vertical;
+  background: #ffffff;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+#prompt:focus {
+  border-color: #19c37d;
+  box-shadow: 0 0 0 3px rgba(25, 195, 125, 0.15);
+}
+
+/* Button styling */
+button {
+  padding: 12px 24px;
+  background-color: #19c37d;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+button:hover:not(:disabled) {
+  background-color: #17a66b;
+}
+
+button:disabled {
+  background-color: #d3d3d3;
+  color: #6b7280;
+  cursor: not-allowed;
+}
+
+/* Thumbnails container */
+#thumbnails {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.thumb {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid #e5e5e5;
+  transition: transform 0.2s ease;
+}
+
+.thumb:hover {
+  transform: scale(1.05);
+}
+
+/* Result/output styling - Enhanced for proper font color and padding */
+#result {
+  margin-top: 20px;
+  padding: 25px; /* Increased padding for better spacing */
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.05);
+  font-size: 1.1rem; /* Slightly larger for readability */
+  color: #353740 !important; /* Explicit font color */
+  line-height: 1.6; /* Improved readability */
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+/* Ensure nested elements from dangerouslySetInnerHTML inherit styles */
+#result * {
+  color: inherit !important; /* Forces child elements to inherit the color */
+  padding: 0; /* Resets any unwanted padding in nested elements */
+  margin: 0 0 10px 0; /* Adds spacing between paragraphs or elements */
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .container {
+    padding: 15px;
+  }
+
+  header {
+    font-size: 1.4rem;
+  }
+
+  #form {
+    padding: 15px;
+  }
+
+  button {
+    padding: 10px 20px;
+  }
+
+  #result {
+    padding: 20px;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: #343541;
+    color: #d9d9e3;
+  }
+
+  header {
+    color: #ececf1;
+    border-bottom-color: #444654;
+  }
+
+  #form,
+  #result {
+    background: #40414f;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  }
+
+  #file {
+    background: #4a4b5b;
+    border-color: #555666;
+    color: #d9d9e3;
+  }
+
+  #file:hover {
+    border-color: #666777;
+  }
+
+  #prompt {
+    background: #40414f;
+    border-color: #555666;
+    color: #d9d9e3;
+  }
+
+  #prompt:focus {
+    border-color: #19c37d;
+    box-shadow: 0 0 0 3px rgba(25, 195, 125, 0.25);
+  }
+
+  .thumb {
+    border-color: #555666;
+  }
+
+  #result {
+    color: #d9d9e3 !important; /* Explicit font color for dark mode */
+  }
+}
+
+/* Add to your existing styles.css */
+
+/* Result container */
+.result-container {
+  position: relative;
+  margin-top: 20px;
+}
+
+/* Copy button styling */
+.copy-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 6px 12px;
+  background-color: #f1f1f1;
+  color: #353740;
+  border: 1px solid #d3d3d3;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.copy-button:hover {
+  background-color: #e0e0e0;
+  color: #202124;
+}
+
+.copy-button:active {
+  background-color: #d0d0d0;
+}
+
+/* Notification styling */
+.copy-notification {
+  position: absolute;
+  top: 10px;
+  right: 70px; /* Positioned left of the copy button */
+  padding: 6px 12px;
+  background-color: #19c37d; /* Green for success */
+  color: #ffffff;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  opacity: 0.9;
+  animation: fadeInOut 2s ease-in-out;
+}
+
+/* Fade in and out animation */
+@keyframes fadeInOut {
+  0% {
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.9;
+  }
+  90% {
+    opacity: 0.9;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* Adjust result padding */
+#result {
+  margin-top: 0;
+  padding: 25px;
+}
+
+/* Dark mode adjustments */
+@media (prefers-color-scheme: dark) {
+  .copy-button {
+    background-color: #555666;
+    color: #d9d9e3;
+    border-color: #666777;
+  }
+
+  .copy-button:hover {
+    background-color: #666777;
+    color: #ececf1;
+  }
+
+  .copy-button:active {
+    background-color: #777888;
+  }
+
+  .copy-notification {
+    background-color: #19c37d; /* Keep green for visibility */
+  }
+}
+
+/* Special case for error notification */
+.copy-notification.error {
+  background-color: #e63946; /* Red for error */
+}
+
+/* File upload container */
+.file-upload-container {
+  position: relative;
   width: 100%;
 }
 
-button {
-  padding: 2px 16px;
+/* Hide the default file input */
+.file-input {
+  position: absolute;
+  width: 0;
+  height: 0;
+  opacity: 0;
+  overflow: hidden;
+  z-index: -1;
 }
 
-.name {
-  flex-shrink: 0;
-  font-size: 80%;
-  margin: 16px 16px 16px 0;
-  opacity: 0.5;
-  text-align: right;
-  width: 50px;
+/* Custom file upload label (acts as the visible button/area) */
+.file-upload-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 12px 15px;
+  background-color: #fafafa;
+  border: 2px dashed #d3d3d3;
+  border-radius: 6px;
+  font-size: 1rem;
+  color: #353740;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+  min-height: 60px; /* Ensures enough space for dragging */
 }
 
-blockquote {
-  margin: 0;
+/* Text inside the label */
+.file-upload-text {
+  font-weight: 500;
 }
 
-.history-item {
-  padding: 0 8px 0 0;
+/* Hover state */
+.file-upload-label:hover {
+  background-color: #f0f0f0;
+  border-color: #b0b0b0;
+  color: #202124;
 }
 
-.history-item.model-role {
-  background: rgba(127, 127, 127, 0.1);
+/* Active state (when clicked or dragging) */
+.file-upload-label:active,
+.file-upload-label.drag-active {
+  background-color: #e5e5e5;
+  border-color: #19c37d;
 }
 
-.history-item > blockquote {
-  flex-grow: 1;
-  margin: 0;
+/* Focus state (for accessibility) */
+.file-input:focus + .file-upload-label {
+  border-color: #19c37d;
+  box-shadow: 0 0 0 3px rgba(25, 195, 125, 0.15);
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .file-upload-label {
+    background-color: #4a4b5b;
+    border-color: #555666;
+    color: #d9d9e3;
+  }
+
+  .file-upload-label:hover {
+    background-color: #555666;
+    border-color: #666777;
+    color: #ececf1;
+  }
+
+  .file-upload-label:active,
+  .file-upload-label.drag-active {
+    background-color: #666777;
+    border-color: #19c37d;
+  }
+
+  .file-input:focus + .file-upload-label {
+    border-color: #19c37d;
+    box-shadow: 0 0 0 3px rgba(25, 195, 125, 0.25);
+  }
 }

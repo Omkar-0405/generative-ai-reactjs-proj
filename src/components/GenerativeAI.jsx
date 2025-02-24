@@ -15,7 +15,8 @@ const GenerativeAI = () => {
   const [thumbnails, setThumbnails] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState("");
-  const [resultStream, setResultStream] = useState();
+  const [resultStream, setResultStream] = useState("");
+  const [copyNotification, setCopyNotification] = useState(null); // New state for notification
 
   const handleFileChange = (event) => {
     const newFiles = Array.from(event.target.files);
@@ -63,11 +64,10 @@ const GenerativeAI = () => {
       setResultStream("loading...");
       let text = "";
       try {
-        if (result.stream)
+        if (result.stream) {
           if (streaming) {
             setResultStream("");
             for await (const chunk of result.stream) {
-              // Get first candidate's current text chunk
               const chunkText = chunk.text();
               text += chunkText;
               setResultStream(marked.parse(text));
@@ -77,6 +77,7 @@ const GenerativeAI = () => {
             const response = await result.response;
             text = response.text();
           }
+        }
       } catch (err) {
         text += "\n\n> " + err;
         console.error(err);
@@ -85,14 +86,46 @@ const GenerativeAI = () => {
       scrollToDocumentBottom();
     };
 
-    updateUI();
-  }, [result]);
+    if (result) updateUI();
+  }, [result, scrollToDocumentBottom]);
+
+  // Function to copy resultStream to clipboard
+  const handleCopy = () => {
+    const tempElement = document.createElement("div");
+    tempElement.innerHTML = resultStream;
+    const plainText = tempElement.innerText || tempElement.textContent;
+
+    navigator.clipboard
+      .writeText(plainText)
+      .then(() => {
+        setCopyNotification("Copied to clipboard!");
+        setTimeout(() => setCopyNotification(null), 2000); // Hide after 2 seconds
+      })
+      .catch((err) => {
+        console.error("Failed to copy: ", err);
+        setCopyNotification("Failed to copy.");
+        setTimeout(() => setCopyNotification(null), 2000); // Hide after 2 seconds
+      });
+  };
 
   return (
     <div className="container">
       <header>Generative AI - Text and Image</header>
       <form id="form" onSubmit={handleSubmit}>
-        <input type="file" id="file" multiple onChange={handleFileChange} />
+        <div className="file-upload-container">
+          <input
+            type="file"
+            id="file"
+            multiple
+            onChange={handleFileChange}
+            className="file-input"
+          />
+          <label htmlFor="file" className="file-upload-label">
+            <span className="file-upload-text">
+              Choose files from the device
+            </span>
+          </label>
+        </div>
         <input
           type="text"
           id="prompt"
@@ -104,6 +137,7 @@ const GenerativeAI = () => {
           {isLoading ? "Loading..." : "Send"}
         </button>
       </form>
+
       {thumbnails.length > 0 && (
         <div id="thumbnails">
           {thumbnails.map((url) => (
@@ -111,10 +145,22 @@ const GenerativeAI = () => {
           ))}
         </div>
       )}
-      <blockquote
-        id="result"
-        dangerouslySetInnerHTML={{ __html: resultStream }}
-      />
+      <div className="result-container">
+        <blockquote
+          id="result"
+          dangerouslySetInnerHTML={{ __html: resultStream }}
+        />
+        {resultStream && resultStream !== "loading..." && (
+          <>
+            <button className="copy-button" onClick={handleCopy}>
+              Copy
+            </button>
+            {copyNotification && (
+              <span className="copy-notification">{copyNotification}</span>
+            )}
+          </>
+        )}
+      </div>
     </div>
   );
 };
